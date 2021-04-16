@@ -17,7 +17,7 @@ class ListTicketComponent extends Component {
     }
     render() {
         return (
-            <div>
+            <div data-testid = "tickets">
                 {
                     this.state.tickets.map(
                         tickets => 
