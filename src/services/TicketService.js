@@ -19,6 +19,10 @@ class TicketService {
     updateTicket(id, ticket){
         return axios.put(TICKET_API_BASE_URL + "/update/" + id, ticket);
     }
+
+    deleteTicket(id) {
+        return axios.delete(TICKET_API_BASE_URL + "/delete/" + id);
+    }
 }
 
 export default new TicketService()
