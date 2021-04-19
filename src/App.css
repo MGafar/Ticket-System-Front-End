@@ -1,9 +1,13 @@
-.container {
+.ticket-list-wrapper {
   background-color: #eaeded;
   -webkit-box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.2);
   -moz-box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.2);
   box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.2);
-  padding: 0;
+  padding: 10px;
+  margin: auto;
+  max-width: 90%;
+  min-height: 100vh;
+  width: 1500px;
 }
 
 .ticket {
@@ -73,6 +77,12 @@
   border-bottom-right-radius: 15px;
 }
 
-.ticket-banner {
+.footer {
+  position: relative;
+  bottom: 0;
   width: 100%;
+  height: 50px;
+  background-color: black;
+  text-align: right;
+  color: #eaeded;
 }
