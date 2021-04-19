@@ -11,6 +11,7 @@ class ListTicketComponent extends Component {
 
         this.createTicket = this.createTicket.bind(this);
         this.editTicket = this.editTicket.bind(this);
+        this.deleteTicket = this.deleteTicket.bind(this);
     }
 
     componentDidMount() {
@@ -25,6 +26,14 @@ class ListTicketComponent extends Component {
 
     editTicket(id){
         this.props.history.push(`/create/${id}`);
+    }
+
+    deleteTicket(id){
+        TicketService.deleteTicket(id).then(res => {
+            TicketService.getTickets().then((response) => {
+                this.setState({tickets : response.data});
+            });
+        });
     }
 
     render() {
@@ -46,7 +55,8 @@ class ListTicketComponent extends Component {
                                         <p>{tickets.description}</p>
                                     </div>
                                     <div className="ticket-right-column">
-                                        <button onClick={() => this.editTicket(tickets.id)} className = "btn btn-btn-info" data-testid = {"updatebutton" + tickets.id} >Update</button>
+                                        <button onClick={() => this.editTicket(tickets.id)} className = "btn btn-info" data-testid = {"updatebutton" + tickets.id}>Update</button>
+                                        <button onClick={() => this.deleteTicket(tickets.id)} className = "btn btn-danger" data-testid = {"deletebutton" + tickets.id}>Delete</button>
                                         <p>ID: {tickets.id}</p>
                                         <p>Author: {tickets.author}</p>
                                         <p>Created: {new Date(tickets.timeCreated).toUTCString()}</p>
