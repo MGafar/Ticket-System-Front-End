@@ -15,7 +15,7 @@ function App() {
           <div className="ticket-list-wrapper"> 
             <Switch>
               <Route path="/" exact component={ListTicketComponent} />
-              <Route path="/create" component={CreateTicketComponent} />
+              <Route path="/create/:id" component={CreateTicketComponent} />
             </Switch>
           </div>
           <FooterComponent />
