@@ -10,6 +10,7 @@ class ListTicketComponent extends Component {
         }
 
         this.createTicket = this.createTicket.bind(this);
+        this.editTicket = this.editTicket.bind(this);
     }
 
     componentDidMount() {
@@ -19,7 +20,11 @@ class ListTicketComponent extends Component {
     }
 
     createTicket(){
-        this.props.history.push('/create');
+        this.props.history.push('/create/new');
+    }
+
+    editTicket(id){
+        this.props.history.push(`/create/${id}`);
     }
 
     render() {
@@ -41,6 +46,7 @@ class ListTicketComponent extends Component {
                                         <p>{tickets.description}</p>
                                     </div>
                                     <div className="ticket-right-column">
+                                        <button onClick={() => this.editTicket(tickets.id)} className = "btn btn-btn-info" data-testid = {"updatebutton" + tickets.id} >Update</button>
                                         <p>ID: {tickets.id}</p>
                                         <p>Author: {tickets.author}</p>
                                         <p>Created: {new Date(tickets.timeCreated).toUTCString()}</p>
