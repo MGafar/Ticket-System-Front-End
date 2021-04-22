@@ -12,10 +12,15 @@ const sampleDeleteDataJson = {
   data: require('./delete.json')
 };
 
+const sampleGetDepartments = {
+  data: require('./readDepartments.json')
+}
+
 const mockProps = { history: { push: jest.fn() } };
 
 describe('TicketsList', () => {
   test('test Create ticket', async () => {
+    mockAxios.get.mockImplementationOnce(() => Promise.resolve(sampleGetDepartments));
     mockAxios.get.mockImplementationOnce(() => Promise.resolve(sampleReadDataJson));
     render(<ListTicketComponent {...mockProps}/>);
     await whenStable();
@@ -24,6 +29,7 @@ describe('TicketsList', () => {
   });
 
   test('test Edit ticket', async () => {
+    mockAxios.get.mockImplementationOnce(() => Promise.resolve(sampleGetDepartments));
     mockAxios.get.mockImplementationOnce(() => Promise.resolve(sampleReadDataJson));
     render(<ListTicketComponent {...mockProps}/>);
     await whenStable();
@@ -32,6 +38,7 @@ describe('TicketsList', () => {
   });
 
   test('test Delete ticket', async () => {
+    mockAxios.get.mockImplementationOnce(() => Promise.resolve(sampleGetDepartments));
     mockAxios.get.mockImplementationOnce(() => Promise.resolve(sampleReadDataJson));
     render(<ListTicketComponent {...mockProps}/>);
     await whenStable();
@@ -41,6 +48,20 @@ describe('TicketsList', () => {
 
     userEvent.click(screen.getByTestId('deletebutton1'));
     await whenStable();
+  });
+
+  test('test change department ticket', async () => {
+    mockAxios.get.mockImplementationOnce(() => Promise.resolve(sampleGetDepartments));
+    mockAxios.get.mockImplementationOnce(() => Promise.resolve(sampleReadDataJson));
+    render(<ListTicketComponent {...mockProps}/>);
+    await whenStable();
+
+    mockAxios.get.mockImplementationOnce(() => Promise.resolve(sampleReadDataJson));
+    userEvent.selectOptions(screen.getByTestId('select-department'), 'All');
+    await whenStable();
+
+    mockAxios.get.mockImplementationOnce(() => Promise.resolve(sampleReadDataJson));
+    userEvent.selectOptions(screen.getByTestId('select-department'), '1');
     await whenStable();
   });
 });
