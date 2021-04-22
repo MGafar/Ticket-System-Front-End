@@ -64,4 +64,22 @@ describe('CreateTicketComponent', () => {
     expect(mockProps.history.push).toBeCalledWith('/');
     expect(mockAxios.put).toHaveBeenCalledTimes(1);
   });
+
+  test('test Add solution ticket', async () => {
+    const mockProps = { history: { push: jest.fn() }, match: { params: { id : 1} }, canAddSolution: true };
+    mockAxios.get.mockImplementationOnce(() => Promise.resolve(sampleGetDepartments));
+    mockAxios.get.mockImplementationOnce(() => Promise.resolve(sampleGetbyIDJson));
+
+    render(<CreateTicketComponent {...mockProps}/>);
+    await whenStable();
+    expect(mockAxios.get).toHaveBeenCalledTimes(2);
+
+    mockAxios.put.mockImplementationOnce(() => Promise.resolve(sampleCreateResponseJson));
+    userEvent.type(screen.getByPlaceholderText("Solution"), "I don't know what I am doing!");
+    userEvent.click(screen.getByText('Mark as Done'));
+    await whenStable();
+
+    expect(mockProps.history.push).toBeCalledWith('/');
+    expect(mockAxios.put).toHaveBeenCalledTimes(1);
+  });
 });

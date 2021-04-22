@@ -9,7 +9,8 @@
         "department": {
             "id": 2,
             "name": "FX"
-        }
+        },
+        "status": "OPEN"
     },
     {
         "id": 2,
@@ -17,6 +18,24 @@
         "author": "Not Muhamad Gafar",
         "description": "My Symphony has stopped receiving messages",
         "timeCreated": 1618308122000,
-        "timeUpdated": 1618308123000
+        "timeUpdated": 1618308123000,
+        "department": {
+            "id": 1,
+            "name": "CREDIT"
+        },
+        "status": "INPROGRESS"
+    },
+    {
+        "id": 3,
+        "title": "Titley McTitleFace",
+        "author": "Author McAuthorFace",
+        "description": "Description McDescriptionFace",
+        "timeCreated": 1618308122000,
+        "timeUpdated": 1618308123000,
+        "department": {
+            "id": 2,
+            "name": "FX"
+        },
+        "status": "DONE"
     }
 ]
