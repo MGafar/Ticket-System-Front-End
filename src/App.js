@@ -16,6 +16,7 @@ function App() {
             <Switch>
               <Route path="/" exact component={ListTicketComponent} />
               <Route path="/create/:id" component={CreateTicketComponent} />
+              <Route path="/solution/:id" render={(props) => (<CreateTicketComponent {...props} canAddSolution={true}/>)} />
             </Switch>
           </div>
           <FooterComponent />

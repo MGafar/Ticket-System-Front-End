@@ -16,6 +16,10 @@ const sampleGetDepartments = {
   data: require('./readDepartments.json')
 }
 
+const sampleMarkAsInProgressJson = {
+  data: require('./markAsInProgress.json')
+}
+
 const mockProps = { history: { push: jest.fn() } };
 
 describe('TicketsList', () => {
@@ -63,5 +67,30 @@ describe('TicketsList', () => {
     mockAxios.get.mockImplementationOnce(() => Promise.resolve(sampleReadDataJson));
     userEvent.selectOptions(screen.getByTestId('select-department'), '1');
     await whenStable();
+  });
+
+  test('test Mark as In Progress', async () => {
+    mockAxios.get.mockImplementationOnce(() => Promise.resolve(sampleGetDepartments));
+    mockAxios.get.mockImplementationOnce(() => Promise.resolve(sampleReadDataJson));
+    render(<ListTicketComponent {...mockProps}/>);
+    await whenStable();
+
+    mockAxios.put.mockImplementationOnce(() => Promise.resolve(sampleMarkAsInProgressJson));
+    mockAxios.get.mockImplementationOnce(() => Promise.resolve(sampleReadDataJson));
+
+    userEvent.click(screen.getByTestId('statusbutton1'));
+    await whenStable();
+  });
+
+  test('test Add solution ticket', async () => {
+    mockAxios.get.mockImplementationOnce(() => Promise.resolve(sampleGetDepartments));
+    mockAxios.get.mockImplementationOnce(() => Promise.resolve(sampleReadDataJson));
+    render(<ListTicketComponent {...mockProps}/>);
+    await whenStable();
+
+    userEvent.click(screen.getByTestId('statusbutton2'));
+    expect(mockProps.history.push).toBeCalledWith(expect.objectContaining({
+      pathname : '/solution/2'
+    }));
   });
 });
