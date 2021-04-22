@@ -1,10 +1,12 @@
-[
-    {
-        "id": 1,
-        "title": "Another one",
-        "author": "DJ Khalid",
-        "description": "We the best music",
-        "timeCreated": 1618831299615,
-        "timeUpdated": 1618831299615
+{
+    "id": 1,
+    "title": "PostMan",
+    "author": "Author",
+    "description": "Description",
+    "timeCreated": 1619021559000,
+    "timeUpdated": 1619022570967,
+    "department": {
+        "id": 2,
+        "name": "FX"
     }
-]
+}

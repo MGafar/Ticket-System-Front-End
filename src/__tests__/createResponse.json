@@ -5,6 +5,9 @@
         "author": "DJ Khalid",
         "description": "We the best music",
         "timeCreated": 1618831299615,
-        "timeUpdated": 1618831299615
+        "timeUpdated": 1618831299615,
+        "department" : {
+            "id" : 1
+        }
     }
 ]

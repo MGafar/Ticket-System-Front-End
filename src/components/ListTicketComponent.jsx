@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
 import TicketService from '../services/TicketService';
+import DepartmentService from '../services/DepartmentService';
 
 class ListTicketComponent extends Component {
     constructor(props){
         super(props)
 
         this.state = {
-            tickets: []
+            tickets: [],
+            departments: []
         }
 
         this.createTicket = this.createTicket.bind(this);
@@ -15,6 +17,10 @@ class ListTicketComponent extends Component {
     }
 
     componentDidMount() {
+        DepartmentService.getDepartments().then((response) => {
+            this.setState({departments : response.data});
+        });
+
         TicketService.getTickets().then((response) => {
             this.setState({tickets : response.data});
         });
@@ -36,14 +42,40 @@ class ListTicketComponent extends Component {
         });
     }
 
+    changeDepartmentHandler = (event) => {
+
+        if(event.target.value === 'All') {
+            TicketService.getTickets().then((response) => {
+                this.setState({tickets : response.data});
+            });
+        } else {
+            TicketService.getTicketsByDepartment(event.target.value).then((response) => {
+                this.setState({tickets : response.data});
+            });
+        }
+        
+        this.setState({department_id : event.target.value});
+    }
+
     render() {
         return (
             <div>
                 <div> 
-                    <button className="btn btn-primary" onClick={this.createTicket}> 
+                    <button className="btn btn-primary" id="btn-create-ticket" onClick={this.createTicket}> 
                         Create Ticket
                     </button>
                 </div>
+
+                <select className="select-css" name="Departments" onChange={this.changeDepartmentHandler} data-testid="select-department">
+                    <option value='All' key='0'>All Departments</option>
+                    {
+                    this.state.departments.map(
+                        departments => 
+                            <option value={departments.id} key={departments.id}>{departments.name}</option>
+                        )
+                    }
+                </select>
+
                 <div data-testid = "tickets">
                     {
                         this.state.tickets.map(
@@ -58,6 +90,7 @@ class ListTicketComponent extends Component {
                                         <button onClick={() => this.editTicket(tickets.id)} className = "btn btn-info" data-testid = {"updatebutton" + tickets.id}>Update</button>
                                         <button onClick={() => this.deleteTicket(tickets.id)} className = "btn btn-danger" data-testid = {"deletebutton" + tickets.id}>Delete</button>
                                         <p>ID: {tickets.id}</p>
+                                        <p>Department: {tickets.department != null ? tickets.department.name : ""}</p>
                                         <p>Author: {tickets.author}</p>
                                         <p>Created: {new Date(tickets.timeCreated).toUTCString()}</p>
                                         <p>Updated: {new Date(tickets.timeUpdated).toUTCString()}</p>
