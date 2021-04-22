@@ -5,7 +5,11 @@
         "author": "Muhamad Gafar",
         "description": "The VDI has decided to stop working again fml",
         "timeCreated": 1618308122000,
-        "timeUpdated": 1618308123000
+        "timeUpdated": 1618308123000,
+        "department": {
+            "id": 2,
+            "name": "FX"
+        }
     },
     {
         "id": 2,

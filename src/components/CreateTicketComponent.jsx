@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import TicketService from '../services/TicketService';
+import DepartmentService from '../services/DepartmentService';
 
 class CreateTicketComponent extends Component {
 
@@ -11,6 +12,9 @@ class CreateTicketComponent extends Component {
             title : '',
             description : '',
             author : '',
+            department_id : 1,
+            department_name : '',
+            departments: [],
         }
 
         this.changeTitleHandler = this.changeTitleHandler.bind(this);
@@ -22,19 +26,24 @@ class CreateTicketComponent extends Component {
 
     componentDidMount() {
 
+        DepartmentService.getDepartments().then((response) => {
+            this.setState({departments : response.data});
+        });
+
         if(this.state.id === 'new'){
             return;
         } else {
             TicketService.getTicketById(this.state.id).then(res => {
                 let ticket = res.data;
-                this.setState({title : ticket.title, author : ticket.author, description: ticket.description});
+                this.setState({title : ticket.title, author : ticket.author, description: ticket.description, department_id: ticket.department.id, department_name: ticket.department.name});
             });
         }
     }
 
     createOrUpdateTicket = (event) => {
         event.preventDefault();
-        let ticket = {title : this.state.title, description : this.state.description, author : this.state.author};
+
+        let ticket = {title : this.state.title, description : this.state.description, author : this.state.author, department : {id : this.state.department_id}};
 
         if(this.state.id === 'new'){
             TicketService.createTicket(ticket).then(res => {
@@ -64,6 +73,10 @@ class CreateTicketComponent extends Component {
         this.setState({author : event.target.value});
     }
 
+    changeDepartmentHandler = (event) => {
+        this.setState({department_id : event.target.value});
+    }
+
     getCreateOrSaveButton(){
         if(this.state.id === 'new') {
             return <button className = "btn btn-success" onClick={this.createOrUpdateTicket}>Create</button>
@@ -91,6 +104,16 @@ class CreateTicketComponent extends Component {
                         <div className="ticket-right-column">
                             <p> Author: <input placeholder = "Author" name="author" className="form-control" 
                                             value={this.state.author || ''} onChange={this.changeAuthorHandler}/></p>
+                        
+                            <select value={this.state.department_id} className="select-css" name="Departments" onChange={this.changeDepartmentHandler} data-testid="select-department">
+                                <option disabled value> -- Select a Department -- </option>
+                                {
+                                this.state.departments.map(
+                                    departments => 
+                                        <option value={departments.id} key={departments.id}>{departments.name}</option>
+                                    )
+                                }
+                            </select>
                         </div>
                     </div>
                 </div>
