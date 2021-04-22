@@ -34,6 +34,10 @@ class ListTicketComponent extends Component {
         this.props.history.push(`/create/${id}`);
     }
 
+    addSolution(id){
+        this.props.history.push({pathname: `/solution/${id}`});
+    }
+
     deleteTicket(id){
         TicketService.deleteTicket(id).then(res => {
             TicketService.getTickets().then((response) => {
@@ -55,6 +59,25 @@ class ListTicketComponent extends Component {
         }
         
         this.setState({department_id : event.target.value});
+    }
+
+    markAsInProgress(id){
+        TicketService.markAsInProgress(id).then(res => {
+            TicketService.getTickets().then((response) => {
+                this.setState({tickets : response.data});
+            });
+        });
+    }
+
+    getStatusButton(status, id){
+
+        if(status === 'OPEN') {
+            return <button onClick={() => this.markAsInProgress(id)} className = "btn btn-light" data-testid = {"statusbutton" + id}>Start Work</button>
+        } else if(status === 'INPROGRESS') {
+            return <button onClick={() => this.addSolution(id)} className = "btn btn-light" data-testid = {"statusbutton" + id}>Mark As Done</button>
+        } else {
+            return <button className = "btn btn-light disabled" data-testid = {"statusbutton" + id} disabled={true}>Done</button>
+        }
     }
 
     render() {
@@ -83,17 +106,19 @@ class ListTicketComponent extends Component {
                             <div className="ticket" key={tickets.id}>
                                 <div className="ticket-content-wrapper">
                                     <div className="ticket-left-column">
-                                        <h2>{tickets.title}</h2>
-                                        <p>{tickets.description}</p>
+                                        <h2><b>Title: </b>{tickets.title}</h2>
+                                        <p><b>Description: </b>{tickets.description}</p>
+                                        <p><b>Solution: </b>{tickets.solution}</p>
                                     </div>
                                     <div className="ticket-right-column">
-                                        <button onClick={() => this.editTicket(tickets.id)} className = "btn btn-info" data-testid = {"updatebutton" + tickets.id}>Update</button>
-                                        <button onClick={() => this.deleteTicket(tickets.id)} className = "btn btn-danger" data-testid = {"deletebutton" + tickets.id}>Delete</button>
-                                        <p>ID: {tickets.id}</p>
-                                        <p>Department: {tickets.department != null ? tickets.department.name : ""}</p>
-                                        <p>Author: {tickets.author}</p>
-                                        <p>Created: {new Date(tickets.timeCreated).toUTCString()}</p>
-                                        <p>Updated: {new Date(tickets.timeUpdated).toUTCString()}</p>
+                                        <button onClick={() => this.editTicket(tickets.id)} className = "btn btn-info" data-testid = {"updatebutton" + tickets.id} disabled={tickets.status === 'DONE'}>Update</button>
+                                        <button onClick={() => this.deleteTicket(tickets.id)} className = "btn btn-danger" data-testid = {"deletebutton" + tickets.id} disabled={tickets.status === 'DONE'}>Delete</button>
+                                        {this.getStatusButton(tickets.status, tickets.id)}
+                                        <p><b>ID:</b> {tickets.id}</p>
+                                        <p><b>Department:</b> {tickets.department.name}</p>
+                                        <p><b>Author:</b> {tickets.author}</p>
+                                        <p><b>Created:</b> {new Date(tickets.timeCreated).toUTCString()}</p>
+                                        <p><b>Updated:</b> {new Date(tickets.timeUpdated).toUTCString()}</p>
                                     </div>
                                 </div>
                             </div>

@@ -27,6 +27,10 @@ class TicketService {
     deleteTicket(id) {
         return axios.delete(TICKET_API_BASE_URL + "/delete/" + id);
     }
+
+    markAsInProgress(id) {
+        return axios.put(TICKET_API_BASE_URL + "/markAsInProgress/" + id);
+    }
 }
 
 export default new TicketService()
