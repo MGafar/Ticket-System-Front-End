@@ -8,5 +8,9 @@
     "department": {
         "id": 2,
         "name": "FX"
+    },
+    "topic": {
+        "id": 1,
+        "name": "Topic"
     }
 }

@@ -14,6 +14,8 @@ class ListTicketComponent extends Component {
         this.createTicket = this.createTicket.bind(this);
         this.editTicket = this.editTicket.bind(this);
         this.deleteTicket = this.deleteTicket.bind(this);
+        this.addSolution = this.addSolution.bind(this);
+        this.changeDepartmentHandler = this.changeDepartmentHandler.bind(this);
     }
 
     componentDidMount() {
@@ -80,6 +82,11 @@ class ListTicketComponent extends Component {
         }
     }
 
+    getSolution(solution){
+        if(solution != null)
+            return(<p><b>Solution: </b>{solution}</p>)
+    }
+
     render() {
         return (
             <div>
@@ -108,7 +115,7 @@ class ListTicketComponent extends Component {
                                     <div className="ticket-left-column">
                                         <h2><b>Title: </b>{tickets.title}</h2>
                                         <p><b>Description: </b>{tickets.description}</p>
-                                        <p><b>Solution: </b>{tickets.solution}</p>
+                                        {this.getSolution(tickets.solution)}
                                     </div>
                                     <div className="ticket-right-column">
                                         <button onClick={() => this.editTicket(tickets.id)} className = "btn btn-info" data-testid = {"updatebutton" + tickets.id} disabled={tickets.status === 'DONE'}>Update</button>
@@ -116,6 +123,7 @@ class ListTicketComponent extends Component {
                                         {this.getStatusButton(tickets.status, tickets.id)}
                                         <p><b>ID:</b> {tickets.id}</p>
                                         <p><b>Department:</b> {tickets.department.name}</p>
+                                        <p><b>Topic:</b> {tickets.topic.name}</p>
                                         <p><b>Author:</b> {tickets.author}</p>
                                         <p><b>Created:</b> {new Date(tickets.timeCreated).toUTCString()}</p>
                                         <p><b>Updated:</b> {new Date(tickets.timeUpdated).toUTCString()}</p>
