@@ -2,23 +2,7 @@ import userEvent from '@testing-library/user-event';
 import { render, screen } from '@testing-library/react';
 import mockAxios from 'axios';
 import ListTicketComponent from '../components/ListTicketComponent';
-import {whenStable} from '../test-utils/Utils'
-
-const sampleReadDataJson = {
-  data: require('./readAll.json')
-};
-
-const sampleDeleteDataJson = {
-  data: require('./delete.json')
-};
-
-const sampleGetDepartments = {
-  data: require('./readDepartments.json')
-}
-
-const sampleMarkAsInProgressJson = {
-  data: require('./markAsInProgress.json')
-}
+import {whenStable, sampleGetDepartments, sampleReadDataJson, sampleMarkAsInProgressJson, sampleDeleteDataJson} from '../test-utils/Utils'
 
 const mockProps = { history: { push: jest.fn() } };
 
