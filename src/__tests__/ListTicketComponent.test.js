@@ -2,29 +2,14 @@ import userEvent from '@testing-library/user-event';
 import { render, screen } from '@testing-library/react';
 import mockAxios from 'axios';
 import ListTicketComponent from '../components/ListTicketComponent';
-import {whenStable} from '../test-utils/Utils'
-
-const sampleReadDataJson = {
-  data: require('./readAll.json')
-};
-
-const sampleDeleteDataJson = {
-  data: require('./delete.json')
-};
-
-const sampleGetDepartments = {
-  data: require('./readDepartments.json')
-}
-
-const sampleMarkAsInProgressJson = {
-  data: require('./markAsInProgress.json')
-}
+import {whenStable, sampleGetDepartments, sampleReadDataJson, sampleMarkAsInProgressJson, sampleDeleteDataJson, sampleGetTopics} from '../test-utils/Utils'
 
 const mockProps = { history: { push: jest.fn() } };
 
 describe('TicketsList', () => {
   test('test Create ticket', async () => {
     mockAxios.get.mockImplementationOnce(() => Promise.resolve(sampleGetDepartments));
+    mockAxios.get.mockImplementationOnce(() => Promise.resolve(sampleGetTopics));
     mockAxios.get.mockImplementationOnce(() => Promise.resolve(sampleReadDataJson));
     render(<ListTicketComponent {...mockProps}/>);
     await whenStable();
@@ -34,6 +19,7 @@ describe('TicketsList', () => {
 
   test('test Edit ticket', async () => {
     mockAxios.get.mockImplementationOnce(() => Promise.resolve(sampleGetDepartments));
+    mockAxios.get.mockImplementationOnce(() => Promise.resolve(sampleGetTopics));
     mockAxios.get.mockImplementationOnce(() => Promise.resolve(sampleReadDataJson));
     render(<ListTicketComponent {...mockProps}/>);
     await whenStable();
@@ -43,6 +29,7 @@ describe('TicketsList', () => {
 
   test('test Delete ticket', async () => {
     mockAxios.get.mockImplementationOnce(() => Promise.resolve(sampleGetDepartments));
+    mockAxios.get.mockImplementationOnce(() => Promise.resolve(sampleGetTopics));
     mockAxios.get.mockImplementationOnce(() => Promise.resolve(sampleReadDataJson));
     render(<ListTicketComponent {...mockProps}/>);
     await whenStable();
@@ -54,23 +41,55 @@ describe('TicketsList', () => {
     await whenStable();
   });
 
-  test('test change department ticket', async () => {
+  test('test change department/topic filter', async () => {
+    // Initial setup
     mockAxios.get.mockImplementationOnce(() => Promise.resolve(sampleGetDepartments));
+    mockAxios.get.mockImplementationOnce(() => Promise.resolve(sampleGetTopics));
     mockAxios.get.mockImplementationOnce(() => Promise.resolve(sampleReadDataJson));
     render(<ListTicketComponent {...mockProps}/>);
     await whenStable();
+    expect(mockAxios.get).toHaveBeenCalledTimes(3);
 
+    // Set filter as None
     mockAxios.get.mockImplementationOnce(() => Promise.resolve(sampleReadDataJson));
-    userEvent.selectOptions(screen.getByTestId('select-department'), 'All');
+    userEvent.selectOptions(screen.getByTestId('select-filter'), 'None');
     await whenStable();
+    expect(mockAxios.get).toHaveBeenCalledTimes(4);
 
+    // Set filter mode to departments
     mockAxios.get.mockImplementationOnce(() => Promise.resolve(sampleReadDataJson));
-    userEvent.selectOptions(screen.getByTestId('select-department'), '1');
+    userEvent.selectOptions(screen.getByTestId('select-filter'), 'Departments');
     await whenStable();
+    expect(mockAxios.get).toHaveBeenCalledTimes(5);
+
+    // Select a department
+    mockAxios.get.mockImplementationOnce(() => Promise.resolve(sampleReadDataJson));
+    userEvent.selectOptions(screen.getByTestId('select-department-topic'), '1');
+    await whenStable();
+    expect(mockAxios.get).toHaveBeenCalledTimes(6);
+
+    // Set filter mode to topics
+    mockAxios.get.mockImplementationOnce(() => Promise.resolve(sampleReadDataJson));
+    userEvent.selectOptions(screen.getByTestId('select-filter'), 'Topics');
+    await whenStable();
+    expect(mockAxios.get).toHaveBeenCalledTimes(7);
+
+    // Select a topic
+    mockAxios.get.mockImplementationOnce(() => Promise.resolve(sampleReadDataJson));
+    userEvent.selectOptions(screen.getByTestId('select-department-topic'), '1');
+    await whenStable();
+    expect(mockAxios.get).toHaveBeenCalledTimes(8);
+
+    // Select any topic
+    mockAxios.get.mockImplementationOnce(() => Promise.resolve(sampleReadDataJson));
+    userEvent.selectOptions(screen.getByTestId('select-department-topic'), 'All');
+    await whenStable();
+    expect(mockAxios.get).toHaveBeenCalledTimes(9);
   });
 
   test('test Mark as In Progress', async () => {
     mockAxios.get.mockImplementationOnce(() => Promise.resolve(sampleGetDepartments));
+    mockAxios.get.mockImplementationOnce(() => Promise.resolve(sampleGetTopics));
     mockAxios.get.mockImplementationOnce(() => Promise.resolve(sampleReadDataJson));
     render(<ListTicketComponent {...mockProps}/>);
     await whenStable();
@@ -84,6 +103,7 @@ describe('TicketsList', () => {
 
   test('test Add solution ticket', async () => {
     mockAxios.get.mockImplementationOnce(() => Promise.resolve(sampleGetDepartments));
+    mockAxios.get.mockImplementationOnce(() => Promise.resolve(sampleGetTopics));
     mockAxios.get.mockImplementationOnce(() => Promise.resolve(sampleReadDataJson));
     render(<ListTicketComponent {...mockProps}/>);
     await whenStable();

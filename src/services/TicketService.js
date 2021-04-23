@@ -20,6 +20,10 @@ class TicketService {
         return axios.get(TICKET_API_BASE_URL + "/readByDepartment/" + id);
     }
 
+    getTicketsByTopic(id){
+        return axios.get(TICKET_API_BASE_URL + "/readByTopic/" + id);
+    }
+
     updateTicket(id, ticket){
         return axios.put(TICKET_API_BASE_URL + "/update/" + id, ticket);
     }

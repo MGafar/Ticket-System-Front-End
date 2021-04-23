@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
-import TicketService from '../services/TicketService';
 import DepartmentService from '../services/DepartmentService';
+import TicketService from '../services/TicketService';
+import TopicService from '../services/TopicService';
+
 
 class CreateTicketComponent extends Component {
 
@@ -15,7 +17,10 @@ class CreateTicketComponent extends Component {
             author : '',
             department_id : 1,
             department_name : '',
+            topic_id : 1,
+            topic_name : '',
             departments: [],
+            topics: [],
             status : '',
             solution : ''
         }
@@ -25,6 +30,9 @@ class CreateTicketComponent extends Component {
         this.changeAuthorHandler = this.changeAuthorHandler.bind(this);
         this.createOrUpdateTicket = this.createOrUpdateTicket.bind(this);
         this.cancelTicket = this.cancelTicket.bind(this);
+        this.changeDepartmentHandler = this.changeDepartmentHandler.bind(this);
+        this.changeTopicHandler = this.changeTopicHandler.bind(this);
+        this.changeSolutionHandler = this.changeSolutionHandler.bind(this);
     }
 
     componentDidMount() {
@@ -33,12 +41,23 @@ class CreateTicketComponent extends Component {
             this.setState({departments : response.data});
         });
 
+        TopicService.getTopics().then((response) => {
+            this.setState({topics : response.data});
+        });
+
         if(this.state.id === 'new'){
             return;
         } else {
             TicketService.getTicketById(this.state.id).then(res => {
                 let ticket = res.data;
-                this.setState({title : ticket.title, author : ticket.author, description: ticket.description, department_id: ticket.department.id, department_name: ticket.department.name, status : ticket.status});
+                this.setState({ title           : ticket.title, 
+                                author          : ticket.author, 
+                                description     : ticket.description, 
+                                department_id   : ticket.department.id, 
+                                department_name : ticket.department.name,
+                                topic_id        : ticket.topic.id, 
+                                topic_name      : ticket.topic.name,
+                                status          : ticket.status});
             });
         }
     }
@@ -47,7 +66,12 @@ class CreateTicketComponent extends Component {
         event.preventDefault();
 
         if(this.state.id === 'new'){
-            let ticket = {title : this.state.title, description : this.state.description, author : this.state.author, department : {id : this.state.department_id}, status : 'OPEN'};
+            let ticket = {  title       : this.state.title, 
+                            description : this.state.description, 
+                            author      : this.state.author, 
+                            department  : {id : this.state.department_id},
+                            topic       : {id : this.state.topic_id}, 
+                            status      : 'OPEN'};
 
             TicketService.createTicket(ticket).then(res => {
                 this.props.history.push('/');
@@ -56,7 +80,13 @@ class CreateTicketComponent extends Component {
             
             let finalStatus = this.state.inSolutionMode ? "DONE" : this.state.status;
 
-            let ticket = {title : this.state.title, description : this.state.description, author : this.state.author, department : {id : this.state.department_id}, status : finalStatus, solution : this.state.solution};
+            let ticket = {  title       : this.state.title, 
+                            description : this.state.description, 
+                            author      : this.state.author, 
+                            department  : {id : this.state.department_id},
+                            topic       : {id : this.state.topic_id}, 
+                            status      : finalStatus, 
+                            solution    : this.state.solution};
             
             TicketService.updateTicket(this.state.id, ticket).then( res => {
                 this.props.history.push('/');
@@ -85,56 +115,64 @@ class CreateTicketComponent extends Component {
         this.setState({department_id : event.target.value});
     }
 
+    changeTopicHandler = (event) => {
+        this.setState({topic_id : event.target.value});
+    }
+
     changeSolutionHandler = (event) => {
         this.setState({solution : event.target.value});
     }
 
-    getSaveButton(){
+    getSaveButtonText(){
         if(this.state.id === 'new') {
-            return <button className = "btn btn-success" onClick={this.createOrUpdateTicket}>Create</button>
+            return "Create";
         } else if (this.state.inSolutionMode) {
-            return <button className = "btn btn-success" onClick={this.createOrUpdateTicket}>Mark as Done</button>
-        } else {
-            return <button className = "btn btn-success" onClick={this.createOrUpdateTicket}>Save</button>
-        }
+            return "Mark as Done"
+        } 
+        
+        return "Save"
     }
 
-    addSolutionBox() {
+    generateSolutionBox() {
         if(this.state.inSolutionMode){
            return  (<p> Solution: <input placeholder = "Solution" name="solution" className="form-control" onChange={this.changeSolutionHandler}/> </p>)
         }
     }
 
+    generateTopicOrDepartmentSelector(selectValue, selectName, selectHandler, selectDataTestId, options) {
+        return(
+        <select value={selectValue} className="select-css" name={selectName} onChange={selectHandler} data-testid={selectDataTestId}>
+            <option disabled value> -- Select a {selectName} -- </option>
+            {
+            options.map(
+                items => 
+                    <option value={items.id} key={items.id} disabled={this.state.inSolutionMode}>{items.name}</option>
+                )
+            }
+        </select>)
+    }
+
+    generateTextInputs(inputPlaceholder, inputName, inputValue, inputHandler){
+        return (<input placeholder = {inputPlaceholder} name={inputName} className="form-control" 
+            value={inputValue || ''} onChange={inputHandler} disabled={this.state.inSolutionMode}/>)
+    }
+
     render() {
         return (
             <div>
-                {this.getSaveButton()}
+                <button className = "btn btn-success" onClick={this.createOrUpdateTicket}>{this.getSaveButtonText()}</button>
                 <button className = "btn btn-danger" onClick={this.cancelTicket} style={{marginLeft: "10px"}}>Cancel</button>
                 <div className="ticket">
                     <div className="ticket-content-wrapper">
                         <div className="ticket-left-column">
-                            <h2>
-                                Title: <input placeholder = "Title" name="title" className="form-control" 
-                                            value={this.state.title || ''} onChange={this.changeTitleHandler} disabled={this.state.inSolutionMode}/> 
-                            </h2>
-                            <p> Description: <input placeholder = "Description" name="description" className="form-control" 
-                                            value={this.state.description || ''} onChange={this.changeDescrtiptionHandler} disabled={this.state.inSolutionMode}/> 
-                            </p>
-                            {this.addSolutionBox()}
+                            <h2> Title: {this.generateTextInputs("Title", "title", this.state.title, this.changeTitleHandler)} </h2>
+                            <p>  Description: {this.generateTextInputs("Description", "description", this.state.description, this.changeDescrtiptionHandler)} </p>
+                            {this.generateSolutionBox()}
                         </div>
                         <div className="ticket-right-column">
-                            <p> Author: <input placeholder = "Author" name="author" className="form-control" 
-                                            value={this.state.author || ''} onChange={this.changeAuthorHandler} disabled={this.state.inSolutionMode}/></p>
-                        
-                            <select value={this.state.department_id} className="select-css" name="Departments" onChange={this.changeDepartmentHandler} data-testid="select-department">
-                                <option disabled value> -- Select a Department -- </option>
-                                {
-                                this.state.departments.map(
-                                    departments => 
-                                        <option value={departments.id} key={departments.id} disabled={this.state.inSolutionMode}>{departments.name}</option>
-                                    )
-                                }
-                            </select>
+                            <p> Author: {this.generateTextInputs("Author", "author", this.state.author, this.changeAuthorHandler)} </p>
+                            {this.generateTopicOrDepartmentSelector( this.state.department_id, "Department", this.changeDepartmentHandler, "select-department", this.state.departments)}
+                            {this.generateTopicOrDepartmentSelector( this.state.topic_id, "Topic", this.changeTopicHandler, "select-topic", this.state.topics)}
                         </div>
                     </div>
                 </div>
