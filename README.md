@@ -1,7 +1,7 @@
 ## Project Documentation
 Please refer to the [back-end repository](https://github.com/MGafar/Ticket-System-Back-End) for diagrams and risk matrix.
 
-## Code coverage
+## Code coverage (96.67%)
 ![alt text](https://i.imgur.com/4sC5Xjo.png)
 
 ## Available Scripts
