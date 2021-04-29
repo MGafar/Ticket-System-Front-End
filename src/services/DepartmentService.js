@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const DEPARTMENT_API_BASE_URL = "http://localhost:9002/department";
+const DEPARTMENT_API_BASE_URL = process.env.DEPARTMENT_API_BASE_URL;
 
 class DepartmentService {
 

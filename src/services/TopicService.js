@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const TOPIC_API_BASE_URL = "http://localhost:9002/topic";
+const TOPIC_API_BASE_URL = process.env.TOPIC_API_BASE_URL;
 
 class TopicService {
 
