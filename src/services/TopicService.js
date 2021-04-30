@@ -1,11 +1,11 @@
 import axios from 'axios';
 
-const TOPIC_API_BASE_URL = process.env.TOPIC_API_BASE_URL;
+const API_BASE_URL = "/api/topic";
 
 class TopicService {
 
     getTopics() {
-        return axios.get(TOPIC_API_BASE_URL + "/readAll");
+        return axios.get(API_BASE_URL + "/readAll");
     }
 
 }

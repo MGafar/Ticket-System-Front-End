@@ -1,11 +1,11 @@
 import axios from 'axios';
 
-const DEPARTMENT_API_BASE_URL = process.env.DEPARTMENT_API_BASE_URL;
+const API_BASE_URL = "/api/department";
 
 class DepartmentService {
 
     getDepartments() {
-        return axios.get(DEPARTMENT_API_BASE_URL + "/readAll");
+        return axios.get(API_BASE_URL + "/readAll");
     }
 
 }
