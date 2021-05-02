@@ -8,7 +8,7 @@ class BannerComponent extends Component {
                     <nav className= "navbar navbar-expand-md navbar-dark bg-dark">
                         <div>
                             <a className="navbar-brand" href="./"> 
-                                Ticket System
+                                TICKET SYSTEM
                             </a>
                         </div>
                     </nav>
